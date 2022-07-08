@@ -79,26 +79,12 @@ WSGI_APPLICATION = 'app_platform.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if os.getenv("DATABASE_URL", "") != "":
-    r = urlparse(os.environ.get("DATABASE_URL"))
-    DATABASES = {
-        "default": {
-                "ENGINE": "django.db.backends.postgresql_psycopg2",
-                "NAME": os.path.relpath(r.path, "/"),
-                "USER": r.username,
-                "PASSWORD": r.password,
-                "HOST": r.hostname,
-                "PORT": r.port,
-                "OPTIONS": {"sslmode": "require"}
-                }
-        }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }   
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}   
 
 
 # Password validation
