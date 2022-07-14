@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from app_platform import settings
 from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
 
 
 # Create your views here.
@@ -43,7 +44,7 @@ def signup(request):
     myuser = User.objects.create_user(username, email, pass1)
     myuser.first_name = fname
     myuser.last_name = lname
-    
+    myuser.is_active = False
     myuser.save()
     
     messages.success(request, "Your account has been successfully created.")
@@ -56,7 +57,12 @@ def signup(request):
     to_list = [myuser.email]
     send_mail(subject, message, from_email, to_list, fail_silently=True)
     
+    ## Confirmation email
     
+    current_site = get_current_site(request)
+    email_subject = "Confirm your email address"
+    message2 = render_to_string('email_confirmation.html')
+        
     return redirect('signin')
     
   return render(request, "app/signup.html")
