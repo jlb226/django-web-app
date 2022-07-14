@@ -7,7 +7,7 @@ from app_platform import settings
 from django.core.mail import send_mail, EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from . tokens import generate_token
 
@@ -111,3 +111,19 @@ def signout(request):
   logout(request)
   message.success(request, "Logged out successfully")
   return redirect('home')
+
+
+def activate(request, uidb64, token):
+  try:
+    uid = force_text(urlsafe_base64_decode(uidb64))
+    myuser = User.objects.get(pk=uid)
+  except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+    myuser = None
+    
+  if myuser is not None and generate_token.check_token(myuser, token):
+    myuser.is_active = True
+    myuser.save()
+    login(request, myuser)
+    return redirect("home")
+  else:
+    return render(request, "activation_failed.html")
