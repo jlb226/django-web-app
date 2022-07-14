@@ -65,12 +65,12 @@ def signup(request):
     
     current_site = get_current_site(request)
     email_subject = "Confirm your email address"
-    message2 = render_to_string('email_confirmation.html', { dict }), {
+    message2 = render_to_string('email_confirmation.html', {
      'name': myuser.first_name,
      'domain': current_site.domain,
      'uid': urlsafe_base64_encode(force_bytes(myuser.pk)),
      'token': generate_token.make_token(myuser)
-    }
+    })
     
     email = EmailMessage(
      email_subject,
