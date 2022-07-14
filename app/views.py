@@ -71,7 +71,17 @@ def signup(request):
      'uid': urlsafe_base64_encode(force_bytes(myuser.pk)),
      'token': generate_token.make_token(myuser)
     }
-        
+    
+    email = EmailMessage(
+     email_subject,
+     message2,
+     settings.EMAIL_HOST_USER,
+     [myuser.email]
+    )
+    
+    email.fail_silently = True
+    email.send()
+    
     return redirect('signin')
     
   return render(request, "app/signup.html")
