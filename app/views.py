@@ -6,6 +6,10 @@ from django.contrib.auth import authenticate, login, logout
 from app_platform import settings
 from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_text
+from . tokens import generate_token
 
 
 # Create your views here.
@@ -61,7 +65,12 @@ def signup(request):
     
     current_site = get_current_site(request)
     email_subject = "Confirm your email address"
-    message2 = render_to_string('email_confirmation.html')
+    message2 = render_to_string('email_confirmation.html', { dict }), {
+     'name': myuser.first_name,
+     'domain': current_site.domain,
+     'uid': urlsafe_base64_encode(force_bytes(myuser.pk)),
+     'token': generate_token.make_token(myuser)
+    }
         
     return redirect('signin')
     
