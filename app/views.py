@@ -109,7 +109,7 @@ def signin(request):
 
 def signout(request):
   logout(request)
-  message.success(request, "Logged out successfully")
+  messages.success(request, "Logged out successfully")
   return redirect('home')
 
 
